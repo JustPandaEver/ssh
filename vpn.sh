@@ -196,7 +196,7 @@ echo '<ca>' >> /root/openconf/client-tcp-ssl.ovpn
 cat /etc/openvpn/ca.crt >> /root/openconf/client-tcp-ssl.ovpn
 echo '</ca>' >> /root/openconf/client-tcp-ssl.ovpn
 apt install zip -y
-zip -r /var/www/html/ovpn.zip /root/openconf/*
+zip -r /home/vps/public_html/ovpn.zip /root/openconf/*
 #firewall untuk memperbolehkan akses UDP dan akses jalur TCP
 
 iptables -F
