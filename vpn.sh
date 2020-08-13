@@ -197,45 +197,10 @@ cat /etc/openvpn/ca.crt >> /root/openconf/client-tcp-ssl.ovpn
 echo '</ca>' >> /root/openconf/client-tcp-ssl.ovpn
 apt install zip -y
 zip -r /home/vps/public_html/ovpn.zip /root/openconf/*
-#firewall untuk memperbolehkan akses UDP dan akses jalur TCP
-
-iptables -F
-iptables -X
-iptables -t nat -F
-iptables -t nat -X
-iptables -t mangle -F
-iptables -t mangle -X
-iptables -P INPUT ACCEPT
-iptables -P FORWARD ACCEPT
-iptables -P OUTPUT ACCEPT
-iptables -t nat -I POSTROUTING -s 10.6.0.0/24 -o $ANU -j MASQUERADE
-iptables -t nat -I POSTROUTING -s 10.7.0.0/24 -o $ANU -j MASQUERADE
-iptables -A INPUT -i -m state --state NEW -p tcp --dport 1194 -j ACCEPT
-iptables -A INPUT -i  -m state --state NEW -p udp --dport 2200 -j ACCEPT
-
-iptables-save > /etc/iptables.up.rules
-chmod +x /etc/iptables.up.rules
-iptables-restore -t < /etc/iptables.up.rules
-
 # Restart service openvpn
 systemctl enable openvpn
 systemctl start openvpn
 /etc/init.d/openvpn restart
-
-# set iptables tambahan
-iptables -F -t nat
-iptables -X -t nat
-iptables -A POSTROUTING -t nat -j MASQUERADE
-iptables-save > /etc/iptables-opvpn.conf
-
-# Restore iptables
-cat > /etc/network/if-up.d/iptables <<-END
-iptables-restore < /etc/iptables.up.rules
-iptables -t nat -A POSTROUTING -s 10.6.0.0/24 -o $ANU -j SNAT --to xxxxxxxxx
-iptables -t nat -A POSTROUTING -s 10.7.0.0/24 -o $ANU -j SNAT --to xxxxxxxxx
-END
-sed -i $MYIP2 /etc/network/if-up.d/iptables
-chmod +x /etc/network/if-up.d/iptables
 
 # restart opevpn
 /etc/init.d/openvpn restart
