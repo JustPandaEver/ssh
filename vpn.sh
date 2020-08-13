@@ -46,11 +46,12 @@ cp /etc/openvpn/easy-rsa/keys/server.crt /etc/openvpn/server.crt
 cp /etc/openvpn/easy-rsa/keys/server.key /etc/openvpn/server.key
 cp /etc/openvpn/easy-rsa/keys/ca.crt /etc/openvpn/ca.crt
 chmod +x /etc/openvpn/ca.crt
-
+cd /root
+mkdir /root/openconf
 # Buat config server TCP 1194
 cd /etc/openvpn
 
-cat > /etc/openvpn/server-tcp-1194.conf <<-END
+cat > /root/openconf/server-tcp-1194.conf <<-END
 port 1194
 proto tcp
 dev tun
@@ -75,7 +76,7 @@ verb 3
 END
 
 # Buat config server UDP 2200
-cat > /etc/openvpn/server-udp-2200.conf <<-END
+cat > /root/openconf/server-udp-2200.conf <<-END
 port 2200
 proto udp
 dev tun
@@ -122,7 +123,7 @@ cp /etc/openvpn/easy-rsa/keys/{server.crt,server.key,ca.crt} clientconfig/
 cd clientconfig
 
 # Buat config client TCP 1194
-cat > /etc/openvpn/client-tcp-1194.ovpn <<-END
+cat > /root/openconf/client-tcp-1194.ovpn <<-END
 client
 dev tun
 proto tcp
@@ -137,10 +138,10 @@ comp-lzo
 verb 3
 END
 
-sed -i $MYIP2 /etc/openvpn/client-tcp-1194.ovpn;
+sed -i $MYIP2 /root/openconf/client-tcp-1194.ovpn;
 
 # Buat config client UDP 2200
-cat > /etc/openvpn/client-udp-2200.ovpn <<-END
+cat > /root/openconf/client-udp-2200.ovpn <<-END
 client
 dev tun
 proto udp
@@ -155,10 +156,10 @@ comp-lzo
 verb 3
 END
 
-sed -i $MYIP2 /etc/openvpn/client-udp-2200.ovpn;
+sed -i $MYIP2 /root/openconf/client-udp-2200.ovpn;
 
 # Buat config client SSL
-cat > /etc/openvpn/client-tcp-ssl.ovpn <<-END
+cat > /root/openconf/client-tcp-ssl.ovpn <<-END
 client
 dev tun
 proto tcp
@@ -173,36 +174,29 @@ comp-lzo
 verb 3
 END
 
-sed -i $MYIP2 /etc/openvpn/client-tcp-ssl.ovpn;
+sed -i $MYIP2 /root/openconf/client-tcp-ssl.ovpn;
 
 cd
 # pada tulisan xxx ganti dengan alamat ip address VPS anda 
 /etc/init.d/openvpn restart
 
 # masukkan certificatenya ke dalam config client TCP 1194
-echo '<ca>' >> /etc/openvpn/client-tcp-1194.ovpn
-cat /etc/openvpn/ca.crt >> /etc/openvpn/client-tcp-1194.ovpn
-echo '</ca>' >> /etc/openvpn/client-tcp-1194.ovpn
+echo '<ca>' >> /root/openconf/client-tcp-1194.ovpn
+cat /etc/openvpn/ca.crt >> /root/openconf/client-tcp-1194.ovpn
+echo '</ca>' >> /root/openconf/client-tcp-1194.ovpn
 
-# Copy config OpenVPN client ke home directory root agar mudah didownload ( TCP 1194 )
-cp /etc/openvpn/client-tcp-1194.ovpn /home/vps/public_html/client-tcp-1194.ovpn
 
 # masukkan certificatenya ke dalam config client UDP 2200
-echo '<ca>' >> /etc/openvpn/client-udp-2200.ovpn
-cat /etc/openvpn/ca.crt >> /etc/openvpn/client-udp-2200.ovpn
-echo '</ca>' >> /etc/openvpn/client-udp-2200.ovpn
-
-# Copy config OpenVPN client ke home directory root agar mudah didownload ( UDP 2200 )
-cp /etc/openvpn/client-udp-2200.ovpn /home/vps/public_html/client-udp-2200.ovpn
+echo '<ca>' >> /root/openconf/client-udp-2200.ovpn
+cat /etc/openvpn/ca.crt >> /root/openconf/client-udp-2200.ovpn
+echo '</ca>' >> /root/openconf/client-udp-2200.ovpn
 
 # masukkan certificatenya ke dalam config client SSL
-echo '<ca>' >> /etc/openvpn/client-tcp-ssl.ovpn
-cat /etc/openvpn/ca.crt >> /etc/openvpn/client-tcp-ssl.ovpn
-echo '</ca>' >> /etc/openvpn/client-tcp-ssl.ovpn
-
-# Copy config OpenVPN client ke home directory root agar mudah didownload ( SSL )
-cp /etc/openvpn/client-tcp-ssl.ovpn /home/vps/public_html/client-tcp-ssl.ovpn
-
+echo '<ca>' >> /root/openconf/client-tcp-ssl.ovpn
+cat /etc/openvpn/ca.crt >> /root/openconf/client-tcp-ssl.ovpn
+echo '</ca>' >> /root/openconf/client-tcp-ssl.ovpn
+apt install zip -y
+zip -r /var/www/html/ovpn.zip /root/openconf/*
 #firewall untuk memperbolehkan akses UDP dan akses jalur TCP
 
 iptables -F
