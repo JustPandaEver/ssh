@@ -212,11 +212,13 @@ wget -O cek "https://raw.githubusercontent.com/JustPandaEver/ssh/master/cek.sh"
 wget -O speedtest "https://raw.githubusercontent.com/JustPandaEver/ssh/master/speedtest_cli.py"
 wget -O info "https://raw.githubusercontent.com/JustPandaEver/ssh/master/info.sh"
 wget -O about "https://raw.githubusercontent.com/JustPandaEver/ssh/master/about.sh"
+wget -O restart "https://raw.githubusercontent.com/JustPandaEver/ssh/master/restart.sh"
 wget -O limit "https://raw.githubusercontent.com/JustPandaEver/ssh/master/user-limit.sh"
 
 echo "0 0 * * * root /sbin/reboot" > /etc/cron.d/reboot
 
 chmod +x menu
+chmod +x restart
 chmod +x usernew
 chmod +x trial
 chmod +x hapus
