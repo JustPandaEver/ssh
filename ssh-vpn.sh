@@ -57,9 +57,6 @@ systemctl start rc-local.service
 echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
 
-sh -c 'echo "deb http://download.webmin.com/download/repository sarge contrib" > /etc/apt/sources.list.d/webmin.list'
-wget -q http://www.webmin.com/jcameron-key.asc | apt-key add jcameron-key.asc
-
 #update
 apt-get update -y
 
@@ -124,6 +121,7 @@ screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500
 # setting port ssh
 sed -i 's/Port 22/Port 22/g' /etc/ssh/sshd_config
 sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+sed -i 's/#PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 # install dropbear
 apt-get -y install dropbear
@@ -146,13 +144,6 @@ apt-get -y install vnstat
 vnstat -u -i $ANU
 service vnstat restart 
 
-cd
-wget -O webmin-current.deb "http://prdownloads.sourceforge.net/webadmin/webmin_1.953_all.deb"
-dpkg -i --force-all webmin-current.deb;
-apt-get -y -f install;
-sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
-rm /root/webmin-current.deb
-/etc/init.d/webmin restart
 
 # install stunnel
 apt-get install stunnel4 -y
@@ -250,7 +241,6 @@ chown -R www-data:www-data /home/vps/public_html
 /etc/init.d/ssh restart
 /etc/init.d/dropbear restart
 /etc/init.d/fail2ban restart
-/etc/init.d/webmin restart
 /etc/init.d/stunnel4 restart
 /etc/init.d/squid start
 screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500
