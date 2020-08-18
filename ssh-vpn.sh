@@ -75,10 +75,6 @@ ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 # set locale
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 
-# set repo
-sh -c 'echo "deb http://download.webmin.com/download/repository sarge contrib" > /etc/apt/sources.list.d/webmin.list'
-wget -qO - http://www.webmin.com/jcameron-key.asc | apt-key add jcameron-key.asc
-
 # install webserver
 apt-get -y install nginx
 
@@ -147,15 +143,6 @@ apt-get -y install vnstat
 vnstat -u -i $ANU
 service vnstat restart 
 
-# install webmin
-cd
-wget -O webmin-current.deb "http://prdownloads.sourceforge.net/webadmin/webmin_1.953_all.deb"
-dpkg -i --force-all webmin-current.deb;
-apt-get -y -f install;
-sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
-rm /root/webmin-current.deb
-/etc/init.d/webmin restart
-
 # install stunnel
 apt-get install stunnel4 -y
 cat > /etc/stunnel/stunnel.conf <<-END
@@ -222,7 +209,6 @@ wget -O hapus "https://raw.githubusercontent.com/JustPandaEver/ssh/master/hapus.
 wget -O member "https://raw.githubusercontent.com/JustPandaEver/ssh/master/member.sh"
 wget -O delete "https://raw.githubusercontent.com/JustPandaEver/ssh/master/delete.sh"
 wget -O cek "https://raw.githubusercontent.com/JustPandaEver/ssh/master/cek.sh"
-wget -O restart "https://raw.githubusercontent.com/JustPandaEver/ssh/master/restart.sh"
 wget -O speedtest "https://raw.githubusercontent.com/JustPandaEver/ssh/master/speedtest_cli.py"
 wget -O info "https://raw.githubusercontent.com/JustPandaEver/ssh/master/info.sh"
 wget -O about "https://raw.githubusercontent.com/JustPandaEver/ssh/master/about.sh"
@@ -237,7 +223,6 @@ chmod +x hapus
 chmod +x member
 chmod +x delete
 chmod +x cek
-chmod +x restart
 chmod +x speedtest
 chmod +x info
 chmod +x about
