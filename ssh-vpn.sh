@@ -57,6 +57,9 @@ systemctl start rc-local.service
 echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
 
+sh -c 'echo "deb http://download.webmin.com/download/repository sarge contrib" > /etc/apt/sources.list.d/webmin.list'
+wget -qO - http://www.webmin.com/jcameron-key.asc | apt-key add jcameron-key.asc
+
 #update
 apt-get update -y
 
@@ -142,6 +145,14 @@ sudo sed -i $MYIP2 /etc/squid/squid.conf
 apt-get -y install vnstat
 vnstat -u -i $ANU
 service vnstat restart 
+
+cd
+wget -O webmin-current.deb "http://prdownloads.sourceforge.net/webadmin/webmin_1.953_all.deb"
+dpkg -i --force-all webmin-current.deb;
+apt-get -y -f install;
+sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
+rm /root/webmin-current.deb
+/etc/init.d/webmin restart
 
 # install stunnel
 apt-get install stunnel4 -y
