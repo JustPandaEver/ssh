@@ -1,6 +1,4 @@
 #!/bin/bash
-# Script restart service dropbear, webmin, squid3, openvpn, openssh, nginx, cron, fail2ban, stunnel4
-# Modivied by Horasss
 /etc/init.d/nginx restart
 /etc/init.d/openvpn restart
 /etc/init.d/cron restart
