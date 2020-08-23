@@ -110,14 +110,18 @@ wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/JustPandaE
 
 # install badvpn
 cd
-wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/JustPandaEver/ssh/master/badvpn-udpgw64"
-sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500' /etc/rc.local
-chmod +x /usr/bin/badvpn-udpgw
-screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500
-sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500' /etc/rc.local
-chmod +x /usr/bin/badvpn-udpgw
-screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500
-
+apt-get install cmake make gcc -y
+cd
+wget https://raw.githubusercontent.com/janda09/private/master/badvpn-1.999.128.tar.bz2
+tar xf badvpn-1.999.128.tar.bz2
+mkdir badvpn-build
+cd badvpn-build
+cmake ~/badvpn-1.999.128 -DBUILD_NOTHING_BY_DEFAULT=1 -DBUILD_UDPGW=1
+make install
+echo 'badvpn-udpgw --listen-addr 127.0.0.1:Badvpn_Port1 > /dev/nul &' >> /etc/rc.local
+badvpn-udpgw --listen-addr 127.0.0.1:Badvpn_Port1 > /dev/nul &
+echo 'badvpn-udpgw --listen-addr 127.0.0.1:Badvpn_Port2 > /dev/nul &' >> /etc/rc.local
+badvpn-udpgw --listen-addr 127.0.0.1:Badvpn_Port2 > /dev/nul &
 # setting port ssh
 sed -i 's/Port 22/Port 22/g' /etc/ssh/sshd_config
 sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
