@@ -221,7 +221,7 @@ wget -O about "https://raw.githubusercontent.com/JustPandaEver/ssh/master/about.
 wget -O restart "https://raw.githubusercontent.com/JustPandaEver/ssh/master/restart.sh"
 wget -O limit "https://raw.githubusercontent.com/JustPandaEver/ssh/master/user-limit.sh"
 
-echo "0 0 * * * root /sbin/reboot" > /etc/cron.d/reboot
+echo "0 0 * * * root /usr/bin/restart" > /etc/cron.d/reboot
 
 chmod +x menu
 chmod +x restart
