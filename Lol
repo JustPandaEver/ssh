@@ -1,0 +1,1 @@
+[method] [host_port]@byu.id [protocol][crlf]Proxy- Connection: keep-alive[crlf] Connection: keep-alive[crlf] [crlf][split]GET byu.id HTTP/1.0[crlf][crlf]Proxy- Connection: keep-alive[crlf]Connection: keep-alive[crlf] [crlf]
